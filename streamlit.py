@@ -193,17 +193,17 @@ def create_df(session_state: dict) -> pd.DataFrame:
 
     # Создаем DataFrame
     df = pd.DataFrame(
-        {"Category": categories, "Subcategory": subcategories, "Value": values}
+        {"Название": categories, "Subcategory": subcategories, "Value": values}
     )
 
     # Преобразуем DataFrame, используя значения из столбцов в качестве индекса и столбцов
-    df = df.pivot(index="Category", columns="Subcategory", values="Value")
+    df = df.pivot(index="Название", columns="Subcategory", values="Value")
 
     # df["Важность"] = np.random.randint(0, 11, df.shape[0])
     # df["Удовлетворение"] = np.random.randint(0, 11, df.shape[0])
     # df["hours"] = np.random.randint(0, 168, df.shape[0])
 
-    df["scaled_hours"] = df["hours"] * 10
+    df["scaled_hours"] = df["hours"] ** 2
     df = df.reset_index()
     return df
 
@@ -218,18 +218,22 @@ if st.button("Создать график"):
 
     chart = (
         alt.Chart(df)
-        .mark_point(filled=False)
+        .mark_point(filled=True)
         .encode(
             x=alt.X("Удовлетворенность", scale=alt.Scale(domain=[-1, 11])),
             y=alt.Y("Важность", scale=alt.Scale(domain=[-1, 11])),
             size=alt.Size(
                 "scaled_hours",
-                # scale=alt.Scale(domain=[0, 168]),
+                scale=alt.Scale(
+                    domain=[0, 168],
+                    type="pow",
+                    exponent=1.3,
+                ),
                 legend=None,
             ),
-            opacity=alt.value(0.5),  # Устанавливаем полупрозрачность
-            color=alt.Color("Category", legend=None),
-            tooltip=["Category", "hours"],
+            opacity=alt.value(0.3),  # Устанавливаем полупрозрачность
+            color=alt.Color("Название", legend=None),
+            tooltip=["Название", "hours"],
         )
         .properties(width=600, height=600)
         # .configure_legend(disable=True)
