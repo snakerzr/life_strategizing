@@ -223,7 +223,9 @@ if st.button("Создать график"):
             x=alt.X("Удовлетворенность", scale=alt.Scale(domain=[-1, 11])),
             y=alt.Y("Важность", scale=alt.Scale(domain=[-1, 11])),
             size=alt.Size(
-                "scaled_hours", scale=alt.Scale(domain=[0, 168]), legend=None
+                "scaled_hours",
+                # scale=alt.Scale(domain=[0, 168]),
+                legend=None,
             ),
             opacity=alt.value(0.5),  # Устанавливаем полупрозрачность
             color=alt.Color("Category", legend=None),
